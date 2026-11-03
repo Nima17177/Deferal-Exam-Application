@@ -1,0 +1,219 @@
+The UserMembers classes are designed to manage user account information and interactions within the DuckDuckDefer application.
+Each subclass represents a different type of user account: Admin, Faculty, Proctor, and Student. These classes have certain methods that are restricted to those account actions, and also inherit from the parent class UserMembersClass common properties and methods shared among all user types.
+Below is a guide for front end developers on how to utilize these classes.
+
+
+// First, import these classes at the beginning of your Kotlin file:
+    import com.example.duckduckdefer.useraccountclasses.DatabaseL
+    import com.example.duckduckdefer.useraccountclasses.UserMembersClass
+    import com.example.duckduckdefer.useraccountclasses.AdminSubclass
+    import com.example.duckduckdefer.useraccountclasses.FacultySubclass
+    import com.example.duckduckdefer.useraccountclasses.ProctorSubclass
+    import com.example.duckduckdefer.useraccountclasses.StudentSubclass
+
+
+
+# Login
+
+// Call the function login(). It requires two strings as parameters, email and password. It returns a pair of strings in a callback function (callback functions are values that get returned after Android Studio connects to Firebase. Your code might continue onto the next line before it connects. Callback functions deal with that).
+// In the example, I named the return value(s) "retVal", "status", and "uid" respectively. You can name them whatever you want.
+// "status" will either indicate the type of user account (Admin, Faculty, Proctor, Student) or an error message (DeactivatedAccount, RejectedAccount, InvalidCreds, NetworkError, UnknownError).
+// "uid" is the unique identifier for the user account, which is used to retrieve user data.
+// Based on the value of "status", either create an object of the corresponding subclass (AdminSubclass, FacultySubclass, ProctorSubclass, StudentSubclass) or print out an error message to the user.
+// After creating the object, call getUserData() on it, passing in the parameter "uid". This function retrieves the user data from the database and populates the object with it. It also returns a boolean in a callback function indicating whether the data retrieval was successful or not.
+
+DatabaseL().login(email:String, password:String) { retVal ->
+    val status:String = retVal.first
+    val uid:String = retVal.second
+    if (status == "Admin"){
+        val user = AdminSubclass()
+        user.getUserData(uid){ success ->
+            if (success){
+                // proceed to admin dashboard
+            }
+            else {
+                // An error occurred
+            }
+        }
+    }
+    else if (status == "Faculty"){
+        val user = FacultySubclass()
+        user.getUserData(uid){ success ->
+            if (success){
+                // proceed to faculty dashboard
+            }
+            else {
+                // An error occurred
+            }
+        }
+    }
+    else if (status == "Proctor"){
+        val user = ProctorSubclass()
+        user.getUserData(uid){ success ->
+            if (success){
+                // proceed to faculty dashboard
+            }
+            else {
+                // An error occurred
+            }
+        }
+    }
+    else if (status == "Student"){
+        val user = StudentSubclass()
+        user.getUserData(uid){ success ->
+            if (success){
+                // proceed to student dashboard
+            }
+            else {
+                // An error occurred
+            }
+        }
+    }
+    else if (status == "DeactivatedAccount" || status == "RejectedAccount" || status == "PendingApproval" || status == "InvalidCreds" || status == "NetworkError" || status == "UnknownError"){
+        // Print error message to user
+    }
+
+
+# Signup
+
+// Call the function signup(). It also requires two strings as parameters, email and password, and returns a pair of strings in a callback function.
+// "status" will either indicate signup was a success or an error message (UserExists, WeakPassword, NetworkError, UnknownError).
+// "uid" can be the unique identifier for the user account if sign up was successful (which is used to store the other user data (username, role, approval status)) or the error code if WeakPassword.
+// Based on the value of "status", either print out a successful sign up message or an error message to the user.
+// If successful sign up, create a UserMembersClass object and then call setUserData() to save the userName and role. Approval status will be initialized to pending.
+// If WeakPassword, the uid will contain a message indicating the password requirements. I have converted the actual error messages into a simple code for you to use.
+
+DatabaseL().signup(email:String, password:String) { retVal ->
+    val status:String = retVal.first
+    val uid:String = retVal.second
+    if (status == "Success"){
+        val user = UserMembersClass() // Don't need to create a specific subclass right now because the user has not been approved yet. Will create a subclass the next time the user logs in after an admin has approved their account.
+        // For role, 0 = Admin, 1 = Faculty, 3 = Student;   2 = Proctor, but that is not needed during sign up.
+        // During signup, approvalStatus will automatically be set to 0 (pending). Later, it will be updated to 1 (approved), -1 (deactivated), or -2 (rejected).
+        user.setUserData(uid:String, email:String, userName:String, role:Int){ success ->
+            if (success){
+                // proceed to waiting for approval screen
+            }
+            else {
+                // An error occurred
+            }
+        }
+    }
+    else if (status == "InvalidCreds" || status == "UserExists" || status == "WeakPassword" || status == "NetworkError" || status == "UnknownError"){
+        // Print error message to user.
+        // For "WeakPassword", uid will contain a message indicating the password requirements.
+        if (status == "WeakPassword"){
+            if (uid.contains("-")){
+                // Needs minimum 6 characters
+            }
+            if (uid.contains("+")){
+                // Must be maximum 4096 characters
+            }
+            if (uid.contains("A")){
+                // Needs at least one uppercase alphabet.
+            }
+            if (uid.contains("a")){
+                // Needs at least one lowercase alphabet.
+            }
+            if (uid.contains("1")){
+                // Needs at least one numerical digit.
+            }
+            if (uid.contains("*")){
+                // Needs at least one special character.
+            }
+        }
+    }
+
+
+# Password Reset
+
+    // It can either accept a UserMembersClass object or an email string as a parameter. Specify which one you are passing in.
+    // If the user is already logged in, pass in the UserMembersClass object.
+    // If the user is not logged in, pass in the email string.
+    DatabaseL().resetPassword(user = UserMembersClass or email = String){success ->
+        if (success){
+            // Email has been sent to user. (Might end up in spam)
+        }
+        else {
+            // An error occurred
+        }
+    }
+
+
+# UserMembersClass Methods
+
+
+# AdminSubclass Methods
+    // In order to use Admin methods, always call the method within an if statement:
+      if (user is AdminSubclass) {
+            user.method()
+      }
+
+    ## Getting a list of Pending Accounts
+    // Add this function to the Admin Dashboard
+
+    // Function Calls
+
+    getPending(user) {pendingUsers ->
+            print pendingUsers list
+        }
+    if (button clicked)
+        user.approveAccount(pendingUser) { success ->
+            if (success){
+                // Send notification to newly approved user.
+                // Show confirmation to admin.
+            }
+        }
+
+    // Function definition
+
+    fun getPending(
+        admin: UserMembersClass,
+        onComplete: (List<UserMembersClass>) -> Unit
+    ) {
+        // If user is not admin, it won't work.
+        if (user !is AdminSubclass) {
+            onComplete(emptyList())
+            return
+        }
+        // If user is admin, then call admin.getPendingAccounts
+        // It returns a list of uids.
+        // Convert that into a list of UserMembersClass
+        user.getPendingAccounts { pendingAccounts ->
+            if (pendingAccounts.isEmpty()) {
+                onComplete(emptyList())
+                return@getPendingAccounts
+            }
+            val pendingUsers = mutableListOf<UserMembersClass>()
+            var remaining = pendingAccounts.size
+            for (uid in pendingAccounts) {
+                val pendingUser = UserMembersClass()
+                pendingUser.getUserData(uid) { success ->
+                    if (success) {
+                        Log.d(
+                            "PendingAccounts",
+                            "Pending ${pendingUser.thisUserName}, ${pendingUser.thisEmail}, ${pendingUser.thisRole}, ${pendingUser.thisApprovalStatus}"
+                        )
+                        pendingUsers.add(pendingUser)
+                    }
+
+                    remaining--
+
+                    // All async calls finished, i.e. all users have been retrieved.
+                    if (remaining == 0) {
+                        onComplete(pendingUsers)
+                    }
+                }
+            }
+        }
+    }
+
+
+# FacultySubclass Methods
+
+
+# ProctorSubclass Methods
+
+
+# StudentSubclass Methods
+

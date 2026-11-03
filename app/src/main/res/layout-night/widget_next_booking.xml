@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg_gradient_dark"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header row: App name + badge -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/duck_logo2" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/app_name"
+            android:textColor="#FFF5F5F5"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_status_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_badge_dark"
+            android:paddingStart="10dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="3dp"
+            android:text="UP NEXT"
+            android:textColor="#FFFFB366"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#22FFFFFF" />
+
+    <!-- Exam / booking name -->
+    <TextView
+        android:id="@+id/widget_exam_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Loading…"
+        android:textColor="#FFF5F5F5"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <!-- Date + Time row -->
+    <LinearLayout
+        android:id="@+id/widget_details_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/widget_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#CCBDBDBD"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/widget_separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  ·  "
+            android:textColor="#66FFFFFF"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/widget_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#CCBDBDBD"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- Room -->
+    <TextView
+        android:id="@+id/widget_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text=""
+        android:textColor="#AABDBDBD"
+        android:textSize="12sp" />
+
+    <!-- People section -->
+    <LinearLayout
+        android:id="@+id/widget_people_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/widget_people_bg_dark"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <!-- Student -->
+        <LinearLayout
+            android:id="@+id/widget_student_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎓  "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/widget_student_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Student: "
+                android:textColor="#FFFFB366"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_student_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="#CCBDBDBD"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Faculty -->
+        <LinearLayout
+            android:id="@+id/widget_faculty_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👨‍🏫  "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/widget_faculty_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Faculty: "
+                android:textColor="#FFFFB366"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_faculty_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="#CCBDBDBD"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Proctor -->
+        <LinearLayout
+            android:id="@+id/widget_proctor_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🛡️  "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/widget_proctor_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Proctor: "
+                android:textColor="#FFFFB366"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_proctor_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="#CCBDBDBD"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Empty state (hidden by default) -->
+    <TextView
+        android:id="@+id/widget_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="No upcoming bookings 🎉"
+        android:textColor="#AABDBDBD"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+</LinearLayout>
+

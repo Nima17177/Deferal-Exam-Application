@@ -1,0 +1,212 @@
+from datetime import datetime
+
+
+def to_dt(date, time):
+    return datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
+
+
+def overlaps(a_start, a_end, b_start, b_end):
+    return max(a_start, b_start) < min(a_end, b_end)
+
+
+def has_conflict(proctor, date, start, end):
+    """Check if proctor already has an assignment during this time"""
+    s_start = to_dt(date, start)
+    s_end = to_dt(date, end)
+
+    for a in proctor["assignments"]:
+        # Use the actual date of the assignment, not the input date
+        a_start = to_dt(a["date"], a["start"])
+        a_end = to_dt(a["date"], a["end"])
+
+        if overlaps(s_start, s_end, a_start, a_end):
+            return True
+
+    return False
+
+
+def find_segments(proctors, date, start, end):
+    segments = []
+
+    s_start = to_dt(date, start)
+    s_end = to_dt(date, end)
+
+    for p in proctors:
+        for slot in p["availability"]:
+            # Skip other dates
+            if slot["date"] != date:
+                continue
+
+            a_start = to_dt(date, slot["start"])
+            a_end = to_dt(date, slot["end"])
+
+            # If there is any overlap, create segment
+            if overlaps(s_start, s_end, a_start, a_end):
+                seg_start = max(s_start, a_start)
+                seg_end = min(s_end, a_end)
+
+                # Skip if the proctor is already assigned during this slot
+                if not has_conflict(p, date, seg_start.strftime("%H:%M"), seg_end.strftime("%H:%M")):
+                    # adjust segment start if proctor has earlier assignments
+                    for a in p["assignments"]:
+                        if a["date"] != date:
+                            continue
+                        a_end = to_dt(a["date"], a["end"])
+                        if a_end > seg_start and a_end < seg_end:
+                            seg_start = a_end
+                    if seg_start < seg_end:
+                        segments.append({
+                            "proctor": p,
+                            "start": seg_start,
+                            "end": seg_end
+                        })
+
+    # Sort segments by start time first
+    segments.sort(key=lambda x: x["start"])
+    return segments
+
+
+def assign_room(proctors, date, room):
+    start = to_dt(date, room["start"])
+    end = to_dt(date, room["end"])
+    coverage = start
+
+    while coverage < end:
+        # Recompute available segments for this coverage
+        segments = find_segments(proctors, date, coverage.strftime("%H:%M"), room["end"])
+        if not segments:
+            print(f"ERROR: Cannot fully cover {room['name']} on {date}")
+            return (proctors, room)
+
+        # Pick the segment that starts <= coverage and ends latest
+        best = None
+        for seg in segments:
+            if seg["start"] <= coverage:
+                if not best or seg["end"] > best["end"]:
+                    best = seg
+
+        if not best:
+            print(f"ERROR: Cannot fully cover {room['name']} on {date}")
+            return (proctors, room)
+
+        p = best["proctor"]
+        assign_start = coverage
+        assign_end = min(best["end"], end)
+
+        # Make the assignment
+        assignment = {
+            "date": date,
+            "start": assign_start.strftime("%H:%M"),
+            "end": assign_end.strftime("%H:%M"),
+            "room": room["name"]
+        }
+        p["assignments"].append(assignment)
+
+        room["assignedProctors"].append({
+            "proctorID": p["uid"],
+            "start": assignment["start"],
+            "end": assignment["end"]
+        })
+
+        coverage = assign_end  # advance coverage
+
+    return (proctors, room)
+
+def assign_proctors(proctors, sessions):
+
+    for session in sessions:
+
+        date = session["date"]
+        session["rooms"].sort(key=lambda r: r["start"])   # ADD THIS
+
+        for room in session["rooms"]:
+
+            t = assign_room(proctors, date, room)
+            (proctors, room2) = t
+            session['room'] = room2
+
+    return (proctors, sessions)
+
+def print_stats(proctors, sessions):
+
+    for p in proctors:
+        print(f"{p['uid']}\n     Avail")
+        for a in p['availability']:
+            print(f"          {a['date']} {a['start']} {a['end']}")
+
+        print("     assignments")
+        for a in p['assignments']:
+            print(f"          {a['date']} {a['start']} {a['end']} {a['room']}")
+
+    print("\nSESSION COVERAGE\n")
+
+    for s in sessions:
+        print(s["date"])
+
+        for r in s["rooms"]:
+            print(f"     {r['name']} {r['start']} {r['end']}")
+
+            for ap in r["assignedProctors"]:
+                print(
+                    f"          {ap['proctorID']} {ap['start']} {ap['end']}"
+                )
+
+
+# --------------------------
+# Example Test Data
+# --------------------------
+
+proctors = [
+    {
+        "uid": "P1",
+        "availability": [
+            {"date": "2026-04-10", "start": "08:00", "end": "18:00"},
+            {"date": "2026-04-09", "start": "08:00", "end": "20:00"}
+        ],
+        "assignments": []
+    },
+    {
+        "uid": "P2",
+        "availability": [
+            {"date": "2026-04-10", "start": "13:00", "end": "16:00"},
+            {"date": "2026-04-11", "start": "11:00", "end": "18:00"}
+        ],
+        "assignments": []
+    },
+    {
+        "uid": "P3",
+        "availability": [
+            {"date": "2026-04-10", "start": "10:00", "end": "12:00"},
+            {"date": "2026-04-11", "start": "13:00", "end": "17:00"}
+        ],
+        "assignments": []
+    }
+]
+
+sessions = [
+    {
+        "date": "2026-04-10",
+        "rooms": [
+            {"name": "7-222", "start": "08:00", "end": "12:00", "assignedProctors": []},
+            {"name": "6-142", "start": "15:00", "end": "18:00", "assignedProctors": []},
+            {"name": "5-345", "start": "12:00", "end": "16:00", "assignedProctors": []}
+        ]
+    },
+    {
+        "date": "2026-04-11",
+        "rooms": [
+            {"name": "8-123", "start": "14:00", "end": "16:00", "assignedProctors": []}
+        ]
+    }
+]
+
+
+t = assign_proctors(proctors, sessions)
+(proctors, sessions) = t
+print_stats(proctors, sessions)
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+*.iml
+.gradle
+/local.properties
+.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Firebase Functions
+functions/node_modules/
+functions/.env
+
+# Secrets
+*.jks
+*.keystore
+.env
+
+# Firebase config (each developer downloads their own)
+app/google-services.json

@@ -1,0 +1,20 @@
+1.
+Introduction of ViewModels:
+◦
+UserViewModel: Manages the currentUser state globally across the app. This is now the "single source of truth" for who is logged in.
+◦
+LoginViewModel: Encapsulates all authentication logic, loading states, and error handling for the Login screen.
+◦
+RegisterViewModel: Handles the complex registration flow, including password validation rules and role-based signup.
+◦
+AdminViewModel: Manages user search, pending approvals, and account status updates (deactivate/reactivate).
+2.
+Cleaner Composables:
+◦
+MainActivity, LoginScreen, RegisterScreen, and AdminDashboard are now much lighter. They focus purely on UI and delegate all "heavy lifting" to their respective ViewModels.
+◦
+State Persistence: Since ViewModels survive configuration changes (like rotating the screen), the user won't lose their typed search query or current loading state.
+3.
+Improved Logical Flow:
+◦
+The AdminDashboard now reacts to state changes in the AdminViewModel. For example, when an account is approved, the AdminViewModel automatically updates the local list, and the UI refreshes instantly.

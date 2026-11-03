@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">DuckDuckDefer</string>
+    <string name="welcome_user">Welcome, %1$s!</string>
+    <string name="next_commitment">My Next Commitment</string>
+    <string name="starts_at">Starts at %1$s</string>
+    <string name="location_label">Location: %1$s</string>
+    <string name="see_details_agenda">See full details in the agenda below.</string>
+    <string name="system_alert">System Alert</string>
+    <string name="coverage_alert_msg">%1$d rooms need proctors for today</string>
+    <string name="schedule_clear_msg">Your schedule is clear for today.</string>
+    <string name="todays_agenda">Today\'s Agenda</string>
+    <string name="no_sessions_scheduled">No sessions scheduled for today.</string>
+    <string name="my_bookings_today">My Bookings Today</string>
+    <string name="my_proctoring_assignments">My Proctoring Assignments</string>
+    <string name="pending_approvals">Pending Approvals</string>
+    <string name="confirm_approval">Confirm Approval</string>
+    <string name="confirm_approval_msg">Are you sure you want to approve the account for %1$s?</string>
+    <string name="confirm_rejection">Confirm Rejection</string>
+    <string name="confirm_rejection_msg">Are you sure you want to reject the account for %1$s?</string>
+    <string name="rooms_active">Rooms Active</string>
+    <string name="bookings_total">Bookings Total</string>
+    <string name="exams_today">Exams Today</string>
+    <string name="next_action">Next Action</string>
+    <string name="assignments">Assignments</string>
+    <string name="bookings">Bookings</string>
+    <string name="widget_description">Shows your next upcoming booking or proctoring session.</string>
+    <string name="widget_label">Next Booking</string>
+    <string name="hce_attendance_description">NFC attendance check-in</string>
+</resources>

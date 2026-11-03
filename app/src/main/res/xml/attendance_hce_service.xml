@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/hce_attendance_description"
+    android:requireDeviceUnlock="false">
+    <aid-group
+        android:category="other"
+        android:description="@string/hce_attendance_description">
+        <!-- Custom proprietary AID: F0 + "DUKATT" in hex. Won't conflict with payment apps. -->
+        <aid-filter android:name="F044554B415454" />
+    </aid-group>
+</host-apdu-service>
