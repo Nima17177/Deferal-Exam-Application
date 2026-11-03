@@ -29,15 +29,8 @@ Built by **Scrum and Done Enterprises**.
 2. Download your own `google-services.json` and place it in `app/`. It is gitignored, so it stays on your machine.
 3. Enable Email/Password and Google sign-in in Firebase Authentication, and create a Firestore database.
 
-### 2. Gemini API key
 
-Get a free key from [Google AI Studio](https://aistudio.google.com/apikey), then add it to `local.properties` in the project root (this file is gitignored, so the key never gets committed):
-
-```properties
-GEMINI_API_KEY=your_key_here
-```
-
-### 3. Run the app
+### 2. Run the app
 
 Open the project in Android Studio, let Gradle sync, and run it on an emulator or device (Android 7.0 / API 24 or newer).
 
